@@ -53,7 +53,7 @@ export const ORIGIN_DESCRIPTIONS: Record<NianhuaOrigin, string> = {
     '朱仙镇木版年画是中国古老的传统工艺品之一，产自河南开封朱仙镇，始于唐代，盛于明清。色彩对比强烈，线条粗犷简练，人物造型夸张，是中原地区年画艺术的代表。',
 };
 
-/** 搜索关键词，支持作品名称、产地、寓意的模糊匹配 */
+/** 搜索关键词，支持作品名称、寓意文字的模糊匹配 */
 export type SearchKeyword = string;
 
 /** 年画列表筛选参数：题材 + 关键词，可自由组合 */

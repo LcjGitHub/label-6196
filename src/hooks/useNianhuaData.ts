@@ -12,9 +12,9 @@ const allItems = nianhuaData as NianhuaItem[];
 
 /**
  * 加载并筛选年画 Mock 数据
- * 支持按题材过滤与关键词过滤（作品名称 / 产地 / 寓意）组合生效
+ * 支持按题材过滤与关键词过滤（作品名称 / 寓意文字）组合生效
  * @param theme   题材筛选键，`all` 表示全部题材
- * @param keyword 搜索关键词，为空时不执行关键词过滤
+ * @param keyword 搜索关键词，为空或 undefined 时不执行关键词过滤
  */
 export function useNianhuaList(
   theme: NianhuaListFilter['theme'],
@@ -25,12 +25,11 @@ export function useNianhuaList(
     if (theme !== 'all') {
       result = result.filter((item) => item.theme === theme);
     }
-    if (keyword) {
-      const kw = keyword.toLowerCase();
+    if (keyword && keyword.trim()) {
+      const kw = keyword.trim().toLowerCase();
       result = result.filter(
         (item) =>
           item.title.toLowerCase().includes(kw) ||
-          item.origin.toLowerCase().includes(kw) ||
           item.meaning.toLowerCase().includes(kw),
       );
     }

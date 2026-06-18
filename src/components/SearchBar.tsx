@@ -17,7 +17,7 @@ interface SearchBarProps {
 /**
  * 关键词搜索栏
  * - 位于首页题材 Tab 下方
- * - 支持按作品名称、产地、寓意实时过滤
+ * - 支持按作品名称、寓意文字实时过滤
  * - 提供带无障碍标签的清空按钮
  */
 export function SearchBar({ value, onChange, onClear }: SearchBarProps) {
@@ -27,7 +27,7 @@ export function SearchBar({ value, onChange, onClear }: SearchBarProps) {
         allowClear={{
           clearIcon: <span aria-label="清空搜索关键词">×</span>,
         }}
-        placeholder="搜索作品名称、产地或寓意…"
+        placeholder="搜索作品名称或寓意文字…"
         prefix={<SearchOutlined className={styles.prefixIcon} />}
         value={value}
         onChange={(e) => onChange(e.target.value)}

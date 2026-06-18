@@ -17,7 +17,7 @@ import styles from './HomePage.module.css';
  *
  * 交互：
  * - 题材筛选与搜索关键词均同步到 URL 查询参数，刷新后保留
- * - 两层过滤可组合生效
+ * - 两层过滤可组合生效（关键词按作品名称、寓意文字匹配）
  * - 榜单卡片支持收藏，与瀑布流卡片共享收藏状态
  */
 export function HomePage() {
