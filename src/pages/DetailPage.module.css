@@ -61,9 +61,20 @@
   text-decoration: underline;
 }
 
+.recommendSection {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 2px dashed #e8d5b7;
+}
+
 @media (max-width: 768px) {
   .content {
     grid-template-columns: 1fr;
     gap: 24px;
+  }
+
+  .recommendSection {
+    margin-top: 16px;
+    padding-top: 16px;
   }
 }

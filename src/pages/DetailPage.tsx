@@ -1,9 +1,13 @@
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Button, Descriptions, Image, Result, Spin, Tag, Typography } from 'antd';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useNianhuaDetail } from '@/hooks/useNianhuaData';
+import {
+  useNianhuaDetail,
+  useSameThemeRecommendations,
+} from '@/hooks/useNianhuaData';
 import { useSameEraRecommendations } from '@/hooks/useEras';
 import { SameEraRecommend } from '@/components/SameEraRecommend';
+import { SameThemeRecommend } from '@/components/SameThemeRecommend';
 import styles from './DetailPage.module.css';
 
 const { Title, Paragraph } = Typography;
@@ -20,6 +24,10 @@ export function DetailPage() {
     item?.era,
     10,
   );
+  const {
+    items: themeRecommendations,
+    total: themeRecTotal,
+  } = useSameThemeRecommendations(id, item?.theme, 6);
 
   if (!id) {
     return (
@@ -105,6 +113,14 @@ export function DetailPage() {
               以上信息均为 Mock 数据，仅供展示与后续迭代参考。
             </Paragraph>
           </div>
+        </div>
+
+        <div className={styles.recommendSection}>
+          <SameThemeRecommend
+            items={themeRecommendations}
+            themeName={item.theme}
+            totalCount={themeRecTotal}
+          />
         </div>
 
         <SameEraRecommend
