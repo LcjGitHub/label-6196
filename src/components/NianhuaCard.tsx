@@ -1,20 +1,26 @@
-import { Card, Image, Tag, Typography } from 'antd';
+import { HeartFilled, HeartOutlined } from '@ant-design/icons';
+import { Card, Image, Tag, Typography, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
+import { useFavorites } from '@/hooks/useFavorites';
 import type { NianhuaItem } from '@/types/nianhua';
 import styles from './NianhuaCard.module.css';
 
 const { Text, Title } = Typography;
 
 interface NianhuaCardProps {
-  /** 年画数据 */
   item: NianhuaItem;
 }
 
-/**
- * 瀑布流中的年画卡片
- */
 export function NianhuaCard({ item }: NianhuaCardProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorited = isFavorite(item.id);
   const aspectRatio = `${item.width} / ${item.height}`;
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(item.id);
+  };
 
   return (
     <Card
@@ -28,6 +34,19 @@ export function NianhuaCard({ item }: NianhuaCardProps) {
             preview={{ mask: '预览' }}
             className={styles.image}
           />
+          <Tooltip title={favorited ? '取消收藏' : '加入收藏'}>
+            <button
+              type="button"
+              onClick={handleFavoriteClick}
+              className={`${styles.favoriteBtn} ${favorited ? styles.favorited : ''}`}
+            >
+              {favorited ? (
+                <HeartFilled className={styles.favoriteIcon} />
+              ) : (
+                <HeartOutlined className={styles.favoriteIcon} />
+              )}
+            </button>
+          </Tooltip>
         </div>
       }
     >
