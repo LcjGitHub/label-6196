@@ -5,8 +5,8 @@ import { NianhuaCard } from './NianhuaCard';
 import styles from './MasonryGrid.module.css';
 
 interface MasonryGridProps {
-  /** 待展示的年画列表 */
   items: NianhuaItem[];
+  keyword?: string;
 }
 
 const breakpointColumns = {
@@ -19,11 +19,14 @@ const breakpointColumns = {
 /**
  * react-masonry-css 瀑布流布局
  */
-export function MasonryGrid({ items }: MasonryGridProps) {
+export function MasonryGrid({ items, keyword }: MasonryGridProps) {
   if (items.length === 0) {
+    const description = keyword
+      ? `未找到与「${keyword}」相关的作品`
+      : '暂无该题材作品';
     return (
       <div className={styles.empty}>
-        <Empty description="暂无该题材作品" />
+        <Empty description={description} />
       </div>
     );
   }

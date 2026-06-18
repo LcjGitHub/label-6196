@@ -6,15 +6,25 @@ import type { NianhuaItem, NianhuaTheme } from '@/types/nianhua';
 /**
  * 加载并筛选年画 Mock 数据
  */
-export function useNianhuaList(theme: 'all' | NianhuaTheme) {
+export function useNianhuaList(theme: 'all' | NianhuaTheme, keyword?: string) {
   const allItems = nianhuaData as NianhuaItem[];
 
   const filteredItems = useMemo(() => {
-    if (theme === 'all') {
-      return allItems;
+    let result = allItems;
+    if (theme !== 'all') {
+      result = result.filter((item) => item.theme === theme);
     }
-    return allItems.filter((item) => item.theme === theme);
-  }, [allItems, theme]);
+    if (keyword) {
+      const kw = keyword.toLowerCase();
+      result = result.filter(
+        (item) =>
+          item.title.toLowerCase().includes(kw) ||
+          item.origin.toLowerCase().includes(kw) ||
+          item.meaning.toLowerCase().includes(kw),
+      );
+    }
+    return result;
+  }, [allItems, theme, keyword]);
 
   return { items: filteredItems, total: filteredItems.length };
 }

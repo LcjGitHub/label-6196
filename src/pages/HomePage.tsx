@@ -2,28 +2,45 @@ import { Tabs } from 'antd';
 import { useMemoizedFn } from 'ahooks';
 import { useSearchParams } from 'react-router-dom';
 import { MasonryGrid } from '@/components/MasonryGrid';
+import { SearchBar } from '@/components/SearchBar';
 import { useNianhuaList } from '@/hooks/useNianhuaData';
 import { THEME_TABS, type NianhuaTheme } from '@/types/nianhua';
 import styles from './HomePage.module.css';
 
-/**
- * 首页：题材 Tab + 瀑布流图录
- */
 export function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const themeParam = searchParams.get('theme') ?? 'all';
+  const keywordParam = searchParams.get('keyword') ?? '';
   const activeTheme = THEME_TABS.some((tab) => tab.key === themeParam)
     ? (themeParam as 'all' | NianhuaTheme)
     : 'all';
 
-  const { items, total } = useNianhuaList(activeTheme);
+  const { items, total } = useNianhuaList(activeTheme, keywordParam || undefined);
 
   const handleTabChange = useMemoizedFn((key: string) => {
+    const next = new URLSearchParams(searchParams);
     if (key === 'all') {
-      setSearchParams({});
-      return;
+      next.delete('theme');
+    } else {
+      next.set('theme', key);
     }
-    setSearchParams({ theme: key });
+    setSearchParams(next);
+  });
+
+  const handleKeywordChange = useMemoizedFn((value: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) {
+      next.set('keyword', value);
+    } else {
+      next.delete('keyword');
+    }
+    setSearchParams(next);
+  });
+
+  const handleKeywordClear = useMemoizedFn(() => {
+    const next = new URLSearchParams(searchParams);
+    next.delete('keyword');
+    setSearchParams(next);
   });
 
   return (
@@ -43,8 +60,14 @@ export function HomePage() {
         className={styles.tabs}
       />
 
+      <SearchBar
+        value={keywordParam}
+        onChange={handleKeywordChange}
+        onClear={handleKeywordClear}
+      />
+
       <p className={styles.count}>共 {total} 件作品</p>
-      <MasonryGrid items={items} />
+      <MasonryGrid items={items} keyword={keywordParam} />
     </div>
   );
 }
