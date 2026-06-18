@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { Empty, Tag, Typography } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
@@ -9,16 +10,87 @@ const { Title, Text } = Typography;
 interface SameEraRecommendProps {
   items: NianhuaItem[];
   eraName: string;
+  totalCount?: number;
 }
 
 /**
  * 同年代作品推荐横滑组件
  * - 横向滚动展示同年代的其他年画作品
- * - 支持鼠标拖拽和触摸滑动
+ * - 支持鼠标按住拖拽和触摸滑动
  * - 左右两侧提供滚动按钮
  * - 每个卡片显示封面、标题、题材，点击跳转至详情页
  */
-export function SameEraRecommend({ items, eraName }: SameEraRecommendProps) {
+export function SameEraRecommend({
+  items,
+  eraName,
+  totalCount,
+}: SameEraRecommendProps) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [hasMoved, setHasMoved] = useState(false);
+
+  const handleScroll = useCallback((direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 320;
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  }, []);
+
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      setIsDragging(true);
+      setHasMoved(false);
+      setStartX(e.pageX - (scrollContainerRef.current?.offsetLeft || 0));
+      setScrollLeft(scrollContainerRef.current?.scrollLeft || 0);
+    },
+    [],
+  );
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - (scrollContainerRef.current?.offsetLeft || 0);
+      const walk = (x - startX) * 1.5;
+      if (Math.abs(walk) > 3) {
+        setHasMoved(true);
+      }
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+      }
+    },
+    [isDragging, startX, scrollLeft],
+  );
+
+  const handleMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      const preventDefault = (e: globalThis.MouseEvent) => {
+        if (hasMoved) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      };
+      container.addEventListener('click', preventDefault, true);
+      return () => {
+        container.removeEventListener('click', preventDefault, true);
+      };
+    }
+  }, [hasMoved]);
+
   if (items.length === 0) {
     return (
       <div className={styles.empty}>
@@ -27,16 +99,7 @@ export function SameEraRecommend({ items, eraName }: SameEraRecommendProps) {
     );
   }
 
-  const handleScroll = (direction: 'left' | 'right') => {
-    const container = document.getElementById('same-era-scroll-container');
-    if (container) {
-      const scrollAmount = 320;
-      container.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
+  const displayCount = totalCount !== undefined ? totalCount : items.length;
 
   return (
     <div className={styles.wrapper}>
@@ -45,7 +108,7 @@ export function SameEraRecommend({ items, eraName }: SameEraRecommendProps) {
           同年代推荐 · {eraName}
         </Title>
         <Text type="secondary" className={styles.subtitle}>
-          共 {items.length} 件作品
+          该年代还有 {displayCount} 件作品
         </Text>
       </div>
 
@@ -60,8 +123,14 @@ export function SameEraRecommend({ items, eraName }: SameEraRecommendProps) {
         </button>
 
         <div
-          id="same-era-scroll-container"
-          className={styles.scrollContainer}
+          ref={scrollContainerRef}
+          className={`${styles.scrollContainer} ${
+            isDragging ? styles.dragging : ''
+          }`}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
         >
           {items.map((item) => (
             <Link
@@ -69,6 +138,11 @@ export function SameEraRecommend({ items, eraName }: SameEraRecommendProps) {
               to={`/item/${item.id}`}
               className={styles.card}
               aria-label={`查看${item.title}详情`}
+              onClick={(e) => {
+                if (hasMoved) {
+                  e.preventDefault();
+                }
+              }}
             >
               <div
                 className={styles.imageWrap}
@@ -79,6 +153,7 @@ export function SameEraRecommend({ items, eraName }: SameEraRecommendProps) {
                   alt={item.title}
                   className={styles.image}
                   loading="lazy"
+                  draggable={false}
                 />
               </div>
               <div className={styles.cardContent}>

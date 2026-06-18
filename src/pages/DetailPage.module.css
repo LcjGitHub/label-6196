@@ -49,6 +49,18 @@
   margin-bottom: 0 !important;
 }
 
+.eraLink {
+  color: #8b5a2b;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.eraLink:hover {
+  color: #6b4423;
+  text-decoration: underline;
+}
+
 @media (max-width: 768px) {
   .content {
     grid-template-columns: 1fr;

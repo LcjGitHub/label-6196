@@ -11,76 +11,136 @@
 }
 
 .title {
-  margin: 0;
+  margin: 0 !important;
   font-size: 28px;
   font-weight: 600;
   color: #1a1a1a;
 }
 
 .subtitle {
-  margin: 8px 0 0;
+  margin: 8px 0 0 !important;
   color: #8c8c8c;
   font-size: 14px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 24px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 1px solid #f0f0f0;
+.segmentWrapper {
+  margin-bottom: 32px;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  justify-content: center;
 }
 
-.card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
-  border-color: #8b5a2b;
+.segmented {
+  background: #fafafa;
+  padding: 4px;
+  border-radius: 10px;
 }
 
-.cardTitle {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 600;
-  color: #1a1a1a;
+.segmentLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+}
+
+.segmentName {
+  font-size: 15px;
+  font-weight: 500;
   letter-spacing: 2px;
 }
 
-.cardCount {
-  font-size: 14px;
-  color: #8b5a2b;
+.segmentCount {
+  font-size: 12px;
+  color: #8c8c8c;
+  background: #fff;
+  padding: 2px 8px;
+  border-radius: 10px;
   font-weight: 500;
 }
 
-.cardDescription {
-  margin: 0;
-  font-size: 14px;
-  color: #595959;
-  line-height: 1.6;
-  flex: 1;
+:global(.ant-segmented-item-selected) .segmentCount {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.25);
 }
 
-.cardFooter {
+.introCard {
+  background: linear-gradient(135deg, #faf6f0 0%, #fff 100%);
+  border-radius: 12px;
+  padding: 36px;
+  border: 1px solid #e8dcc8;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.introHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.eraTitle {
+  margin: 0 !important;
+  font-size: 26px;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: 4px;
+}
+
+.eraCount {
+  font-size: 14px;
+  color: #8b5a2b;
+  font-weight: 500;
+  background: #f5efe6;
+  padding: 4px 14px;
+  border-radius: 4px;
+}
+
+.eraDescription {
+  margin: 0 0 24px !important;
+  font-size: 15px;
+  line-height: 1.9;
+  color: #595959;
+}
+
+.actionRow {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
-  color: #8b5a2b;
-  font-size: 14px;
-  font-weight: 500;
-  gap: 4px;
+}
+
+.enterLink {
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr;
+  .introCard {
+    padding: 24px;
+  }
+
+  .eraTitle {
+    font-size: 22px;
+  }
+
+  .segmentLabel {
+    gap: 4px;
+    padding: 2px 4px;
+  }
+
+  .segmentName {
+    font-size: 14px;
+  }
+
+  .segmentCount {
+    font-size: 11px;
+    padding: 1px 6px;
   }
 }

@@ -74,21 +74,25 @@ export function useEraDetail(eraName: string | undefined) {
  * @param currentId 当前作品 ID
  * @param era 年代名称
  * @param limit 最大返回数量，默认 10
- * @returns 同年代其他作品列表
+ * @returns 同年代其他作品列表和该年代剩余作品总数
  */
 export function useSameEraRecommendations(
   currentId: string | undefined,
   era: string | undefined,
   limit: number = 10,
 ) {
-  const recommendations = useMemo(() => {
+  const { items, total } = useMemo(() => {
     if (!era) {
-      return [];
+      return { items: [], total: 0 };
     }
-    return allItems
-      .filter((item) => item.era === era && item.id !== currentId)
-      .slice(0, limit);
+    const filtered = allItems.filter(
+      (item) => item.era === era && item.id !== currentId,
+    );
+    return {
+      items: filtered.slice(0, limit),
+      total: filtered.length,
+    };
   }, [currentId, era, limit]);
 
-  return recommendations;
+  return { items, total };
 }

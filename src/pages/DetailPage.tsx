@@ -9,13 +9,17 @@ import styles from './DetailPage.module.css';
 const { Title, Paragraph } = Typography;
 
 /**
- * 年画详情页：寓意、年代、产地，以及同年代作品推荐
+ * 年画详情页：寓意、年代（可点击）、产地，以及同年代作品推荐
  */
 export function DetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { item } = useNianhuaDetail(id);
-  const recommendations = useSameEraRecommendations(id, item?.era, 10);
+  const { items: recommendations, total: recTotal } = useSameEraRecommendations(
+    id,
+    item?.era,
+    10,
+  );
 
   if (!id) {
     return (
@@ -45,6 +49,15 @@ export function DetailPage() {
       />
     );
   }
+
+  const eraLink = (
+    <Link
+      to={`/eras/${encodeURIComponent(item.era)}`}
+      className={styles.eraLink}
+    >
+      {item.era}
+    </Link>
+  );
 
   return (
     <Spin spinning={false}>
@@ -83,7 +96,7 @@ export function DetailPage() {
               className={styles.descriptions}
               items={[
                 { key: 'meaning', label: '寓意', children: item.meaning },
-                { key: 'era', label: '年代', children: item.era },
+                { key: 'era', label: '年代', children: eraLink },
                 { key: 'origin', label: '产地', children: item.origin },
               ]}
             />
@@ -94,7 +107,11 @@ export function DetailPage() {
           </div>
         </div>
 
-        <SameEraRecommend items={recommendations} eraName={item.era} />
+        <SameEraRecommend
+          items={recommendations}
+          eraName={item.era}
+          totalCount={recTotal}
+        />
       </div>
     </Spin>
   );
