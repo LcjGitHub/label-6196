@@ -1,6 +1,26 @@
 /** 年画题材分类 */
 export type NianhuaTheme = '门神' | '娃娃' | '戏曲' | '吉祥' | '民俗';
 
+/** 题材筛选键，`all` 代表不按题材过滤 */
+export type NianhuaThemeKey = 'all' | NianhuaTheme;
+
+/** 搜索关键词，支持作品名称、产地、寓意的模糊匹配 */
+export type SearchKeyword = string;
+
+/** 年画列表筛选参数：题材 + 关键词，可自由组合 */
+export interface NianhuaListFilter {
+  /** 题材筛选键，`all` 表示全部题材 */
+  theme: NianhuaThemeKey;
+  /** 搜索关键词，为空或 undefined 时不执行关键词过滤 */
+  keyword?: SearchKeyword;
+}
+
+/** 单个题材 Tab 选项 */
+export interface ThemeTabOption {
+  key: NianhuaThemeKey;
+  label: string;
+}
+
 /** 年画图录条目 */
 export interface NianhuaItem {
   /** 唯一标识 */
@@ -24,7 +44,7 @@ export interface NianhuaItem {
 }
 
 /** 全部题材 Tab 选项 */
-export const THEME_TABS: Array<{ key: 'all' | NianhuaTheme; label: string }> = [
+export const THEME_TABS: ThemeTabOption[] = [
   { key: 'all', label: '全部' },
   { key: '门神', label: '门神' },
   { key: '娃娃', label: '娃娃' },

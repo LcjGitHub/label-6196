@@ -4,19 +4,27 @@ import { useSearchParams } from 'react-router-dom';
 import { MasonryGrid } from '@/components/MasonryGrid';
 import { SearchBar } from '@/components/SearchBar';
 import { useNianhuaList } from '@/hooks/useNianhuaData';
-import { THEME_TABS, type NianhuaTheme } from '@/types/nianhua';
+import { THEME_TABS, type NianhuaThemeKey } from '@/types/nianhua';
 import styles from './HomePage.module.css';
 
+/**
+ * 首页：题材 Tab + 关键词搜索 + 瀑布流图录
+ * - 题材筛选与搜索关键词均同步到 URL 查询参数，刷新后保留
+ * - 两层过滤可组合生效
+ */
 export function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const themeParam = searchParams.get('theme') ?? 'all';
   const keywordParam = searchParams.get('keyword') ?? '';
   const activeTheme = THEME_TABS.some((tab) => tab.key === themeParam)
-    ? (themeParam as 'all' | NianhuaTheme)
+    ? (themeParam as NianhuaThemeKey)
     : 'all';
 
   const { items, total } = useNianhuaList(activeTheme, keywordParam || undefined);
 
+  /**
+   * 题材 Tab 切换：将主题 key 写入 URL，不影响已有搜索关键词
+   */
   const handleTabChange = useMemoizedFn((key: string) => {
     const next = new URLSearchParams(searchParams);
     if (key === 'all') {
@@ -27,6 +35,9 @@ export function HomePage() {
     setSearchParams(next);
   });
 
+  /**
+   * 关键词输入变更：将 keyword 写入 URL，不影响已有题材筛选
+   */
   const handleKeywordChange = useMemoizedFn((value: string) => {
     const next = new URLSearchParams(searchParams);
     if (value) {
@@ -37,6 +48,9 @@ export function HomePage() {
     setSearchParams(next);
   });
 
+  /**
+   * 清空搜索关键词：从 URL 中移除 keyword 参数
+   */
   const handleKeywordClear = useMemoizedFn(() => {
     const next = new URLSearchParams(searchParams);
     next.delete('keyword');
