@@ -1,0 +1,31 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.subtitle {
+  margin: 8px 0 0;
+  color: #8c8c8c;
+  font-size: 14px;
+}
+
+.tabs {
+  margin-bottom: 8px;
+}
+
+.count {
+  margin: 0 0 16px;
+  color: #8c8c8c;
+  font-size: 13px;
+}

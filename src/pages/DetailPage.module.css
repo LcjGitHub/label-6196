@@ -1,0 +1,57 @@
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.back {
+  padding-left: 0;
+  margin-bottom: 16px;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.imageSection {
+  background: #fafafa;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+}
+
+.image {
+  width: 100%;
+  display: block;
+}
+
+.infoSection {
+  min-width: 0;
+}
+
+.title {
+  margin-top: 0 !important;
+  margin-bottom: 12px !important;
+}
+
+.themeTag {
+  margin-bottom: 24px;
+}
+
+.descriptions {
+  margin-bottom: 16px;
+}
+
+.note {
+  font-size: 13px;
+  margin-bottom: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
