@@ -13,7 +13,7 @@ import styles from './DetailPage.module.css';
 const { Title, Paragraph } = Typography;
 
 /**
- * 年画详情页：寓意、年代（可点击）、产地，以及同年代作品推荐
+ * 年画详情页：寓意、年代（可点击）、产地，以及同题材与同年代作品推荐
  */
 export function DetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -121,13 +121,13 @@ export function DetailPage() {
             themeName={item.theme}
             totalCount={themeRecTotal}
           />
-        </div>
 
-        <SameEraRecommend
-          items={recommendations}
-          eraName={item.era}
-          totalCount={recTotal}
-        />
+          <SameEraRecommend
+            items={recommendations}
+            eraName={item.era}
+            totalCount={recTotal}
+          />
+        </div>
       </div>
     </Spin>
   );

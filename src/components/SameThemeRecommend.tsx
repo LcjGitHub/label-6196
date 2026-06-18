@@ -75,6 +75,35 @@ export function SameThemeRecommend({
     setIsDragging(false);
   }, []);
 
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      setHasMoved(false);
+      const touch = e.touches[0];
+      setStartX(touch.pageX - (scrollContainerRef.current?.offsetLeft || 0));
+      setScrollLeft(scrollContainerRef.current?.scrollLeft || 0);
+    },
+    [],
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      const touch = e.touches[0];
+      const x = touch.pageX - (scrollContainerRef.current?.offsetLeft || 0);
+      const walk = (x - startX) * 1.5;
+      if (Math.abs(walk) > 3) {
+        setHasMoved(true);
+      }
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+      }
+    },
+    [startX, scrollLeft],
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (container) {
@@ -131,6 +160,9 @@ export function SameThemeRecommend({
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {items.map((item) => (
             <Link
