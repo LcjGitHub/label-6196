@@ -1,5 +1,5 @@
 import { Input } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, CloseCircleFilled } from '@ant-design/icons';
 import styles from './SearchBar.module.css';
 
 /**
@@ -23,18 +23,28 @@ interface SearchBarProps {
 export function SearchBar({ value, onChange, onClear }: SearchBarProps) {
   return (
     <div className={styles.searchBar}>
-      <Input
-        allowClear={{
-          clearIcon: <span aria-label="清空搜索关键词">×</span>,
-        }}
-        placeholder="搜索作品名称或寓意文字…"
-        prefix={<SearchOutlined className={styles.prefixIcon} />}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onClear={onClear}
-        className={styles.input}
-        aria-label="搜索年画关键词"
-      />
+      <div className={styles.inputWrapper}>
+        <SearchOutlined className={styles.prefixIcon} />
+        <Input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="搜索作品名称或寓意文字…"
+          className={styles.input}
+          aria-label="搜索年画关键词"
+          bordered={false}
+        />
+        {value && (
+          <button
+            type="button"
+            onClick={onClear}
+            className={styles.clearBtn}
+            aria-label="清空搜索关键词"
+            title="清空搜索关键词"
+          >
+            <CloseCircleFilled />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

@@ -107,7 +107,13 @@
 }
 
 .empty {
-  padding: 24px 0;
+  padding: 16px 0;
+  text-align: center;
+}
+
+.empty :global(.ant-empty-description) {
+  font-size: 13px;
+  color: #8c8c8c;
 }
 
 @media (max-width: 768px) {

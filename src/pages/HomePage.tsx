@@ -82,15 +82,17 @@ export function HomePage() {
         className={styles.tabs}
       />
 
-      <SearchBar
-        value={keywordParam}
-        onChange={handleKeywordChange}
-        onClear={handleKeywordClear}
-      />
+      <div className={styles.searchBarWrapper}>
+        <SearchBar
+          value={keywordParam}
+          onChange={handleKeywordChange}
+          onClear={handleKeywordClear}
+        />
+      </div>
 
       <div className={styles.mainLayout}>
         <div className={styles.rankingsCol}>
-          <RankingsArea isSidebar />
+          <RankingsArea isSidebar theme={activeTheme} keyword={keywordParam || undefined} />
         </div>
         <div className={styles.contentCol}>
           <p className={styles.count}>共 {total} 件作品</p>

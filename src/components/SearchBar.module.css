@@ -2,10 +2,61 @@
   margin-bottom: 12px;
 }
 
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 0 11px;
+  transition: all 0.3s;
+  background: #fff;
+}
+
+.inputWrapper:hover,
+.inputWrapper:focus-within {
+  border-color: #4096ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+}
+
 .prefixIcon {
   color: #bfbfbf;
+  margin-right: 8px;
+  flex-shrink: 0;
 }
 
 .input {
-  border-radius: 8px;
+  flex: 1;
+  border: none;
+  box-shadow: none;
+  padding: 7px 0;
+}
+
+.input:focus {
+  border: none;
+  box-shadow: none;
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  color: #bfbfbf;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
+  border-radius: 4px;
+  transition: color 0.3s;
+}
+
+.clearBtn:hover,
+.clearBtn:focus {
+  color: #8c8c8c;
+  outline: none;
+}
+
+.clearBtn:focus-visible {
+  outline: 2px solid #4096ff;
+  outline-offset: 1px;
 }

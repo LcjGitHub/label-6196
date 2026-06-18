@@ -100,7 +100,7 @@ export function RankingSection({ section }: RankingSectionProps) {
   if (section.items.length === 0) {
     return (
       <div className={styles.empty}>
-        <Empty description={`暂无${section.title}作品`} />
+        <Empty description="暂无匹配作品" image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </div>
     );
   }

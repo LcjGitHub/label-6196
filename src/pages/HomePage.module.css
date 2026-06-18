@@ -28,6 +28,23 @@
   align-self: flex-start;
 }
 
+.searchBarWrapper {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 12px;
+}
+
+.searchBarWrapper::before {
+  content: '';
+  width: 360px;
+  flex-shrink: 0;
+}
+
+.searchBarWrapper > :global(*) {
+  flex: 1;
+  min-width: 0;
+}
+
 .mainLayout {
   display: flex;
   gap: 32px;
@@ -71,6 +88,14 @@
 }
 
 @media (max-width: 1100px) {
+  .searchBarWrapper {
+    gap: 0;
+  }
+
+  .searchBarWrapper::before {
+    display: none;
+  }
+
   .mainLayout {
     flex-direction: column;
     gap: 8px;
