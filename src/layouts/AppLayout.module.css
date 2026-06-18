@@ -19,6 +19,12 @@
   gap: 16px;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
 .logo {
   font-size: 18px;
   font-weight: 600;
@@ -33,6 +39,33 @@
 .tagline {
   font-size: 12px;
   color: #8c8c8c;
+}
+
+.originsLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #595959;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.originsLink:hover {
+  color: #d9b38c;
+}
+
+.originsLink:global(.active) {
+  color: #d9b38c;
+  font-weight: 500;
+}
+
+.originsIcon {
+  font-size: 16px;
+}
+
+.originsText {
+  line-height: 1;
 }
 
 .favoritesLink {
