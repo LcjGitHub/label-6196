@@ -9,6 +9,13 @@ import {
 
 const allItems = nianhuaData as NianhuaItem[];
 
+/**
+ * 获取所有产地及其作品数量
+ * - 从 Mock 数据中提取不重复的产地列表
+ * - 按产地名称字典序排序
+ * - 统计每个产地的作品数量并补充简介
+ * @returns 产地信息列表和产地总数
+ */
 export function useOrigins() {
   const origins = useMemo(() => {
     const originCount = new Map<string, number>();
@@ -28,12 +35,19 @@ export function useOrigins() {
       }
     });
 
+    originList.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN'));
+
     return originList;
   }, []);
 
   return { origins, total: origins.length };
 }
 
+/**
+ * 根据产地名称获取产地详情及该产地下的所有作品
+ * @param originName 产地名称，undefined 时返回 undefined
+ * @returns 产地信息和作品列表，若产地不存在则返回 undefined
+ */
 export function useOriginDetail(originName: string | undefined) {
   const origin = useMemo(() => {
     if (!originName || !(originName in ORIGIN_DESCRIPTIONS)) {
@@ -54,15 +68,4 @@ export function useOriginDetail(originName: string | undefined) {
   }, [originName]);
 
   return { origin };
-}
-
-export function useNianhuaByOrigin(originName: string | undefined) {
-  const items = useMemo(() => {
-    if (!originName) {
-      return [];
-    }
-    return allItems.filter((item) => item.origin === originName);
-  }, [originName]);
-
-  return { items, total: items.length };
 }

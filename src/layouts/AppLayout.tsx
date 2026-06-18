@@ -1,15 +1,26 @@
-import { Layout, Typography, Badge, Dropdown, MenuProps } from 'antd';
+import { Layout, Typography, Badge, Dropdown, type MenuProps } from 'antd';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { HeartOutlined, DownOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useMemoizedFn } from 'ahooks';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useOrigins } from '@/hooks/useOrigins';
-
 import styles from './AppLayout.module.css';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
 
+/**
+ * 全局布局：顶栏 + 内容区 + 页脚
+ * - 顶栏左侧：Logo 链接到首页
+ * - 顶栏右侧：按产地浏览下拉菜单、我的收藏入口
+ * - 内容区：通过 Outlet 渲染子路由页面
+ * - 页脚：版权信息
+ *
+ * 产地浏览下拉菜单：
+ * - 支持点击和 hover 触发展开，兼容触控设备
+ * - 菜单项包含「全部产地索引」和各具体产地
+ * - 点击菜单项自动跳转并关闭菜单
+ */
 export function AppLayout() {
   const { favoriteIds } = useFavorites();
   const { origins } = useOrigins();
@@ -29,7 +40,7 @@ export function AppLayout() {
       label: '全部产地索引',
       icon: <EnvironmentOutlined />,
     },
-    { type: 'divider' as const },
+    { type: 'divider' },
     ...origins.map((origin) => ({
       key: origin.name,
       label: (
@@ -41,7 +52,12 @@ export function AppLayout() {
         </span>
       ),
     })),
-  ])();
+  ])() as MenuProps['items'];
+
+  const menuProps: MenuProps = {
+    items: menuItems,
+    onClick: handleMenuClick,
+  };
 
   return (
     <Layout className={styles.layout}>
@@ -53,8 +69,18 @@ export function AppLayout() {
           <Text className={styles.tagline}>Mock 数据 · 无 CMS</Text>
         </div>
         <div className={styles.headerRight}>
-          <Dropdown menu={{ items: menuItems, onClick: handleMenuClick }} placement="bottomRight">
-            <NavLink to="/origins" className={styles.originsLink}>
+          <Dropdown
+            menu={menuProps}
+            placement="bottomRight"
+            trigger={['click', 'hover']}
+          >
+            <NavLink
+              to="/origins"
+              className={styles.originsLink}
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
               <EnvironmentOutlined className={styles.originsIcon} />
               <span className={styles.originsText}>按产地浏览</span>
               <DownOutlined style={{ fontSize: 10 }} />

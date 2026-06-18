@@ -1,17 +1,17 @@
-import { useMemoizedFn } from 'ahooks';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { useOrigins } from '@/hooks/useOrigins';
-import type { OriginInfo } from '@/types/nianhua';
 import styles from './OriginsPage.module.css';
 
+/**
+ * 产地索引页：以卡片形式展示所有年画产地
+ * - 从 Mock 数据提取不重复产地并按名称排序
+ * - 每个卡片显示产地名称、作品数量和产地简介
+ * - 点击卡片跳转至对应产地详情页
+ * - 卡片使用 Link 元素，支持键盘聚焦和无障碍访问
+ */
 export function OriginsPage() {
   const { origins, total } = useOrigins();
-  const navigate = useNavigate();
-
-  const handleCardClick = useMemoizedFn((origin: OriginInfo) => {
-    navigate(`/origins/${encodeURIComponent(origin.name)}`);
-  });
 
   return (
     <div className={styles.page}>
@@ -22,10 +22,11 @@ export function OriginsPage() {
 
       <div className={styles.grid}>
         {origins.map((origin) => (
-          <div
+          <Link
             key={origin.name}
+            to={`/origins/${encodeURIComponent(origin.name)}`}
             className={styles.card}
-            onClick={() => handleCardClick(origin)}
+            aria-label={`查看${origin.name}的${origin.count}件年画作品`}
           >
             <h3 className={styles.cardTitle}>{origin.name}</h3>
             <span className={styles.cardCount}>{origin.count} 件作品</span>
@@ -34,7 +35,7 @@ export function OriginsPage() {
               查看作品
               <ArrowRightOutlined />
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>

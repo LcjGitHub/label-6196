@@ -5,6 +5,13 @@ import { MasonryGrid } from '@/components/MasonryGrid';
 import { useOriginDetail } from '@/hooks/useOrigins';
 import styles from './OriginDetailPage.module.css';
 
+/**
+ * 产地详情页：展示产地介绍及该产地下的所有年画作品
+ * - 顶部显示产地名称、作品数量和产地详细介绍
+ * - 下方使用瀑布流布局展示该产地下的所有年画作品
+ * - 支持返回上一页导航
+ * - 处理参数缺失和产地不存在的错误场景
+ */
 export function OriginDetailPage() {
   const { origin: originParam } = useParams<{ origin: string }>();
   const navigate = useNavigate();
@@ -60,7 +67,6 @@ export function OriginDetailPage() {
       </div>
 
       <h2 className={styles.sectionTitle}>代表作品</h2>
-      <p className={styles.countText}>共 {origin.items.length} 件作品</p>
 
       {origin.items.length === 0 ? (
         <div className={styles.empty}>
