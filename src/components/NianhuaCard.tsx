@@ -38,6 +38,7 @@ export function NianhuaCard({ item }: NianhuaCardProps) {
             <button
               type="button"
               onClick={handleFavoriteClick}
+              aria-label={favorited ? `取消收藏 ${item.title}` : `收藏 ${item.title}`}
               className={`${styles.favoriteBtn} ${favorited ? styles.favorited : ''}`}
             >
               {favorited ? (
