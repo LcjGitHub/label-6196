@@ -7,10 +7,23 @@ import styles from './RankingSection.module.css';
 
 const { Title, Text } = Typography;
 
+/**
+ * 单个榜单区块组件 Props
+ */
 interface RankingSectionProps {
+  /** 单个榜单数据，含标题、副标题、作品列表 */
   section: RankingSectionType;
 }
 
+/**
+ * 单个榜单区块组件
+ *
+ * - 顶部显示榜单标题、副标题、作品总数
+ * - 内容区域横向滚动展示榜单缩略卡片
+ * - 支持鼠标按住拖拽和触摸滑动
+ * - 左右两侧提供滚动按钮（小屏幕下隐藏）
+ * - 卡片前三名显示金/银/铜排名徽章
+ */
 export function RankingSection({ section }: RankingSectionProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -18,6 +31,7 @@ export function RankingSection({ section }: RankingSectionProps) {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [hasMoved, setHasMoved] = useState(false);
 
+  /** 左右滚动按钮点击处理 */
   const handleScroll = useCallback((direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
       const scrollAmount = 320;
@@ -28,6 +42,7 @@ export function RankingSection({ section }: RankingSectionProps) {
     }
   }, []);
 
+  /** 鼠标按下：开始拖拽 */
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
       setIsDragging(true);
@@ -38,6 +53,7 @@ export function RankingSection({ section }: RankingSectionProps) {
     [],
   );
 
+  /** 鼠标移动：拖拽滚动 */
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
       if (!isDragging) return;
@@ -54,14 +70,17 @@ export function RankingSection({ section }: RankingSectionProps) {
     [isDragging, startX, scrollLeft],
   );
 
+  /** 鼠标抬起：结束拖拽 */
   const handleMouseUp = useCallback(() => {
     setIsDragging(false);
   }, []);
 
+  /** 鼠标离开：结束拖拽 */
   const handleMouseLeave = useCallback(() => {
     setIsDragging(false);
   }, []);
 
+  /** 拖拽过程中阻止默认点击事件，避免误触发卡片跳转 */
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (container) {

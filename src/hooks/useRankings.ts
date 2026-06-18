@@ -5,16 +5,30 @@ import type {
   NianhuaTheme,
 } from '@/types/nianhua';
 
+/**
+ * 单个榜单区块数据结构
+ */
 export interface RankingSection {
+  /** 榜单唯一标识 */
   id: string;
+  /** 榜单标题，如「今日推荐」「门神精选」 */
   title: string;
+  /** 榜单副标题，说明性文字 */
   subtitle?: string;
+  /** 榜单内的年画作品列表 */
   items: NianhuaItem[];
 }
 
+/** 全部题材枚举，用于生成各题材精选榜单 */
 const THEMES: NianhuaTheme[] = ['门神', '娃娃', '戏曲', '吉祥', '民俗'];
+/** 每个榜单默认展示的作品数量上限 */
 const SECTION_SIZE = 6;
 
+/**
+ * 基于种子的 Fisher–Yates 洗牌算法，保证同一天内榜单顺序稳定
+ * @param arr  待打乱的数组
+ * @param seed 随机种子，同一天固定则结果固定
+ */
 function shuffle<T>(arr: T[], seed: number): T[] {
   const result = [...arr];
   let s = seed;
@@ -26,14 +40,33 @@ function shuffle<T>(arr: T[], seed: number): T[] {
   return result;
 }
 
+/**
+ * 获取当天的整数种子值（年×10000 + 月×100 + 日）
+ * 用于保证同一天内推荐结果不变，次日自动刷新
+ */
 function getTodaySeed(): number {
   const now = new Date();
   return now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
 }
 
+/**
+ * 首页热门推荐榜单数据钩子
+ *
+ * 功能：
+ * - 根据模拟数据生成固定数量的榜单区块
+ * - 「今日推荐」：从全部作品中按日期种子随机抽取 6 件
+ * - 「题材精选」：对每个题材分别生成精选榜单（门神、娃娃、戏曲、吉祥、民俗）
+ * - 各榜单间作品去重：已出现在「今日推荐」的作品不会在题材精选中重复展示
+ * - 当某题材可用作品数量不足 6 件时，副标题会自动标注实际数量
+ *
+ * @returns todayRecommend     今日推荐榜单
+ * @returns themeSelections    各题材精选榜单数组
+ * @returns allRankings        全部榜单（今日推荐 + 各题材精选）
+ */
 export function useRankings() {
   const allItems = useMemo(() => nianhuaData as NianhuaItem[], []);
 
+  /** 今日推荐：全部作品中随机取 6 件 */
   const todayRecommend = useMemo<RankingSection>(() => {
     const seed = getTodaySeed();
     const shuffled = shuffle(allItems, seed);
@@ -45,20 +78,35 @@ export function useRankings() {
     };
   }, [allItems]);
 
+  /** 今日推荐中已出现的作品 id 集合，用于后续题材精选去重 */
+  const todayIds = useMemo(
+    () => new Set(todayRecommend.items.map((item) => item.id)),
+    [todayRecommend],
+  );
+
+  /** 各题材精选榜单：过滤掉今日推荐已出现的作品，不足 6 件时在副标题中标注实际数量 */
   const themeSelections = useMemo<RankingSection[]>(() => {
     return THEMES.map((theme) => {
-      const themeItems = allItems.filter((item) => item.theme === theme);
+      const themeItems = allItems.filter(
+        (item) => item.theme === theme && !todayIds.has(item.id),
+      );
       const seed = getTodaySeed() + theme.length;
       const shuffled = shuffle(themeItems, seed);
+      const selected = shuffled.slice(0, SECTION_SIZE);
+      const count = selected.length;
       return {
         id: `theme-${theme}`,
         title: `${theme}精选`,
-        subtitle: `${theme}题材佳作`,
-        items: shuffled.slice(0, SECTION_SIZE),
+        subtitle:
+          count < SECTION_SIZE
+            ? `${theme}题材佳作 · 共 ${count} 件`
+            : `${theme}题材佳作`,
+        items: selected,
       };
     }).filter((section) => section.items.length > 0);
-  }, [allItems]);
+  }, [allItems, todayIds]);
 
+  /** 全部榜单汇总：今日推荐 + 各题材精选 */
   const allRankings = useMemo<RankingSection[]>(() => {
     return [todayRecommend, ...themeSelections];
   }, [todayRecommend, themeSelections]);

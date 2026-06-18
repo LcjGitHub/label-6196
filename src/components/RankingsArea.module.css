@@ -6,13 +6,39 @@
   margin-bottom: 24px;
 }
 
+.area.sidebar {
+  padding: 0;
+  border-top: none;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
 .area > :last-child {
   margin-bottom: 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   .area {
     padding: 20px 0 4px;
     margin-bottom: 20px;
+  }
+
+  .area.sidebar {
+    padding: 20px 0 4px;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .area {
+    padding: 16px 0 0;
+    margin-bottom: 16px;
+  }
+
+  .area.sidebar {
+    padding: 16px 0 0;
+    margin-bottom: 16px;
   }
 }

@@ -1,17 +1,40 @@
-import { Tag, Typography } from 'antd';
+import { HeartFilled, HeartOutlined } from '@ant-design/icons';
+import { Tag, Typography, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
+import { useFavorites } from '@/hooks/useFavorites';
 import type { NianhuaItem } from '@/types/nianhua';
 import styles from './RankingCard.module.css';
 
 const { Text } = Typography;
 
+/**
+ * 榜单缩略卡片 Props
+ */
 interface RankingCardProps {
+  /** 年画作品数据 */
   item: NianhuaItem;
+  /** 榜单排名（1-3 名会显示金/银/铜徽章） */
   rank?: number;
 }
 
+/**
+ * 榜单缩略卡片组件
+ *
+ * - 展示作品封面、标题、题材标签、产地
+ * - 前三名显示排名徽章（1金/2银/3铜）
+ * - 右上角收藏按钮，与瀑布流卡片共享收藏状态
+ * - 点击卡片跳转至作品详情页
+ */
 export function RankingCard({ item, rank }: RankingCardProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorited = isFavorite(item.id);
   const aspectRatio = `${item.width} / ${item.height}`;
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(item.id);
+  };
 
   return (
     <Link
@@ -32,6 +55,20 @@ export function RankingCard({ item, rank }: RankingCardProps) {
             {rank}
           </div>
         )}
+        <Tooltip title={favorited ? '取消收藏' : '加入收藏'}>
+          <button
+            type="button"
+            onClick={handleFavoriteClick}
+            aria-label={favorited ? `取消收藏 ${item.title}` : `收藏 ${item.title}`}
+            className={`${styles.favoriteBtn} ${favorited ? styles.favorited : ''}`}
+          >
+            {favorited ? (
+              <HeartFilled className={styles.favoriteIcon} />
+            ) : (
+              <HeartOutlined className={styles.favoriteIcon} />
+            )}
+          </button>
+        </Tooltip>
       </div>
       <div className={styles.cardContent}>
         <Text className={styles.cardTitle} ellipsis>
