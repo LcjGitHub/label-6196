@@ -41,6 +41,33 @@
   color: #8c8c8c;
 }
 
+.erasLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #595959;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.erasLink:hover {
+  color: #8b5a2b;
+}
+
+.erasLink:global(.active) {
+  color: #8b5a2b;
+  font-weight: 500;
+}
+
+.erasIcon {
+  font-size: 16px;
+}
+
+.erasText {
+  line-height: 1;
+}
+
 .originsLink {
   display: flex;
   align-items: center;

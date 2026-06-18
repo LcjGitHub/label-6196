@@ -22,6 +22,23 @@ export interface OriginInfo {
   description: string;
 }
 
+/** 年代信息 */
+export interface EraInfo {
+  /** 年代名称 */
+  name: string;
+  /** 该年代的作品数量 */
+  count: number;
+  /** 年代简介 */
+  description: string;
+}
+
+/** 年代介绍数据 */
+export const ERA_DESCRIPTIONS: Record<string, string> = {
+  明代: '明代是年画艺术的萌芽与初步发展期，木版印刷技术的进步为年画的普及提供了基础，年画题材以门神、神像为主，风格古朴浑厚。',
+  清代: '清代是年画艺术的鼎盛时期，各地年画产地纷纷崛起，题材涵盖娃娃、戏曲、吉祥图案等，技法成熟，色彩丰富，流传广泛，是年画艺术的黄金时代。',
+  民国: '民国时期年画艺术在传统基础上有所革新，题材更加贴近现实生活，同时受到西方印刷术和新思潮的影响，呈现出新旧交融的独特风貌。',
+};
+
 /** 产地介绍数据 */
 export const ORIGIN_DESCRIPTIONS: Record<NianhuaOrigin, string> = {
   '天津杨柳青':

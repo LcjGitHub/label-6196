@@ -2,17 +2,20 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Button, Descriptions, Image, Result, Spin, Tag, Typography } from 'antd';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useNianhuaDetail } from '@/hooks/useNianhuaData';
+import { useSameEraRecommendations } from '@/hooks/useEras';
+import { SameEraRecommend } from '@/components/SameEraRecommend';
 import styles from './DetailPage.module.css';
 
 const { Title, Paragraph } = Typography;
 
 /**
- * 年画详情页：寓意、年代、产地
+ * 年画详情页：寓意、年代、产地，以及同年代作品推荐
  */
 export function DetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { item } = useNianhuaDetail(id);
+  const recommendations = useSameEraRecommendations(id, item?.era, 10);
 
   if (!id) {
     return (
@@ -90,6 +93,8 @@ export function DetailPage() {
             </Paragraph>
           </div>
         </div>
+
+        <SameEraRecommend items={recommendations} eraName={item.era} />
       </div>
     </Spin>
   );

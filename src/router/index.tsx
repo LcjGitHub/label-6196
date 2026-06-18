@@ -5,6 +5,8 @@ import { FavoritesPage } from '@/pages/FavoritesPage';
 import { HomePage } from '@/pages/HomePage';
 import { OriginsPage } from '@/pages/OriginsPage';
 import { OriginDetailPage } from '@/pages/OriginDetailPage';
+import { ErasPage } from '@/pages/ErasPage';
+import { EraDetailPage } from '@/pages/EraDetailPage';
 
 /** 应用路由配置 */
 export const router = createBrowserRouter([
@@ -27,6 +29,14 @@ export const router = createBrowserRouter([
       {
         path: 'origins/:origin',
         element: <OriginDetailPage />,
+      },
+      {
+        path: 'eras',
+        element: <ErasPage />,
+      },
+      {
+        path: 'eras/:era',
+        element: <EraDetailPage />,
       },
       {
         path: 'item/:id',

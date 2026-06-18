@@ -1,9 +1,10 @@
 import { Layout, Typography, Badge, Dropdown, type MenuProps } from 'antd';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { HeartOutlined, DownOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { HeartOutlined, DownOutlined, EnvironmentOutlined, HistoryOutlined } from '@ant-design/icons';
 import { useMemoizedFn } from 'ahooks';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useOrigins } from '@/hooks/useOrigins';
+import { useEras } from '@/hooks/useEras';
 import styles from './AppLayout.module.css';
 
 const { Header, Content, Footer } = Layout;
@@ -12,21 +13,17 @@ const { Text } = Typography;
 /**
  * 全局布局：顶栏 + 内容区 + 页脚
  * - 顶栏左侧：Logo 链接到首页
- * - 顶栏右侧：按产地浏览下拉菜单、我的收藏入口
+ * - 顶栏右侧：按年代浏览下拉菜单、按产地浏览下拉菜单、我的收藏入口
  * - 内容区：通过 Outlet 渲染子路由页面
  * - 页脚：版权信息
- *
- * 产地浏览下拉菜单：
- * - 支持点击和 hover 触发展开，兼容触控设备
- * - 菜单项包含「全部产地索引」和各具体产地
- * - 点击菜单项自动跳转并关闭菜单
  */
 export function AppLayout() {
   const { favoriteIds } = useFavorites();
   const { origins } = useOrigins();
+  const { eras } = useEras();
   const navigate = useNavigate();
 
-  const handleMenuClick: MenuProps['onClick'] = useMemoizedFn(({ key }) => {
+  const handleOriginMenuClick: MenuProps['onClick'] = useMemoizedFn(({ key }) => {
     if (key === 'index') {
       navigate('/origins');
     } else {
@@ -34,7 +31,15 @@ export function AppLayout() {
     }
   });
 
-  const menuItems: MenuProps['items'] = useMemoizedFn(() => [
+  const handleEraMenuClick: MenuProps['onClick'] = useMemoizedFn(({ key }) => {
+    if (key === 'index') {
+      navigate('/eras');
+    } else {
+      navigate(`/eras/${encodeURIComponent(key)}`);
+    }
+  });
+
+  const originMenuItems: MenuProps['items'] = useMemoizedFn(() => [
     {
       key: 'index',
       label: '全部产地索引',
@@ -54,9 +59,34 @@ export function AppLayout() {
     })),
   ])() as MenuProps['items'];
 
-  const menuProps: MenuProps = {
-    items: menuItems,
-    onClick: handleMenuClick,
+  const eraMenuItems: MenuProps['items'] = useMemoizedFn(() => [
+    {
+      key: 'index',
+      label: '全部年代索引',
+      icon: <HistoryOutlined />,
+    },
+    { type: 'divider' },
+    ...eras.map((era) => ({
+      key: era.name,
+      label: (
+        <span>
+          {era.name}
+          <span style={{ marginLeft: 8, color: '#8c8c8c', fontSize: 12 }}>
+            {era.count}件
+          </span>
+        </span>
+      ),
+    })),
+  ])() as MenuProps['items'];
+
+  const originMenuProps: MenuProps = {
+    items: originMenuItems,
+    onClick: handleOriginMenuClick,
+  };
+
+  const eraMenuProps: MenuProps = {
+    items: eraMenuItems,
+    onClick: handleEraMenuClick,
   };
 
   return (
@@ -70,7 +100,24 @@ export function AppLayout() {
         </div>
         <div className={styles.headerRight}>
           <Dropdown
-            menu={menuProps}
+            menu={eraMenuProps}
+            placement="bottomRight"
+            trigger={['click', 'hover']}
+          >
+            <NavLink
+              to="/eras"
+              className={styles.erasLink}
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <HistoryOutlined className={styles.erasIcon} />
+              <span className={styles.erasText}>按年代浏览</span>
+              <DownOutlined style={{ fontSize: 10 }} />
+            </NavLink>
+          </Dropdown>
+          <Dropdown
+            menu={originMenuProps}
             placement="bottomRight"
             trigger={['click', 'hover']}
           >
